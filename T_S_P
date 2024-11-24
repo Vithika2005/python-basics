@@ -1,0 +1,47 @@
+from itertools import permutations
+
+def calculate_distance(path, distance_matrix):
+    """
+    Calculate the total distance of a given path based on the distance matrix.
+    """
+    total_distance = 0
+    for i in range(len(path) - 1):
+        total_distance += distance_matrix[path[i]][path[i + 1]]
+    # Add the distance to return to the starting city
+    total_distance += distance_matrix[path[-1]][path[0]]
+    return total_distance
+
+def tsp_brute_force(distance_matrix):
+    """
+    Solve the Traveling Salesperson Problem using a brute-force approach.
+    """
+    n = len(distance_matrix)  # Number of cities
+    cities = list(range(n))   # List of city indices
+    min_distance = float('inf')
+    best_path = None
+
+    # Generate all possible permutations of cities
+    for perm in permutations(cities):
+        distance = calculate_distance(perm, distance_matrix)
+        if distance < min_distance:
+            min_distance = distance
+            best_path = perm
+
+    return best_path, min_distance
+
+# Example usage
+if __name__ == "__main__":
+    # Example distance matrix (symmetric)
+    distance_matrix = [
+        [0, 10, 15, 20],
+        [10, 0, 35, 25],
+        [15, 35, 0, 30],
+        [20, 25, 30, 0]
+    ]
+
+    # Solve TSP
+    best_path, min_distance = tsp_brute_force(distance_matrix)
+
+    # Display results
+    print("Optimal Path:", " -> ".join(map(str, best_path)) + " -> " + str(best_path[0]))
+    print("Minimum Distance:", min_distance)
